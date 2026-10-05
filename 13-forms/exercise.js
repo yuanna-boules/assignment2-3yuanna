@@ -24,10 +24,16 @@
  * @returns {{ name: string, price: number }}
  */
 export function readForm() {
-  // TODO: read .value off each input. Trim the name, and convert the price
-  // with Number().
-  throw new Error("readForm is not written yet");
+  const name = document.querySelector("#name").value.trim();
+  const price = Number(document.querySelector("#price").value);
+
+  return {
+    name: name,
+    price: price
+  };
 }
+
+
 
 /**
  * Empties both boxes.
@@ -35,8 +41,8 @@ export function readForm() {
  * @returns {void}
  */
 export function clearForm() {
-  // TODO: set each input's .value to an empty string.
-  throw new Error("clearForm is not written yet");
+ document.querySelector("#name").value = "";
+  document.querySelector("#price").value = "";
 }
 
 /**
@@ -52,9 +58,51 @@ export function clearForm() {
  * @returns {void}
  */
 export function renderList(items) {
-  // TODO: empty #list first, then build one card per item — the same card
-  // shape as module 12.
-  throw new Error("renderList is not written yet");
+  const list = document.querySelector("#list");
+
+  list.innerHTML = "";
+
+  for (const item of items) {
+    const card = document.createElement("li");
+    card.classList.add("card");
+
+    const title = document.createElement("h3");
+    title.textContent = item.name;
+
+    const price = document.createElement("p");
+    price.classList.add("price");
+    price.textContent = `${item.price} EGP`;
+
+    card.append(title, price);
+    list.append(card);
+  }
+}
+export function wireForm() {
+  const items = [];
+
+  document.querySelector("#product-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const form = readForm();
+    const error = document.querySelector("#error");
+
+    if (!form.name) {
+      error.textContent = "Give the product a name.";
+      return;
+    }
+
+    if (!form.price || !Number.isFinite(form.price) || form.price <= 0) {
+      error.textContent = "Give the product a price.";
+      return;
+    }
+
+    error.textContent = "";
+
+    items.push(form);
+
+    renderList(items);
+    clearForm();
+  });
 }
 
 /**
